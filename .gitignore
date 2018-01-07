@@ -57,3 +57,11 @@ typings/
 # dotenv environment variables file
 .env
 
+npm-debug.log
+.project
+.vscode
+.history
+.DS_Store
+\.settings/
+build/env.js
+dist/
