@@ -8,7 +8,7 @@
             <Card :bordered="false">
                 <p slot="title">
                     <Icon type="log-in"></Icon>
-                    欢迎登录
+                    欢迎注册
                 </p>
                 <div class="form-con">
                     <Form ref="loginForm" :model="form" :rules="rules">
@@ -26,13 +26,23 @@
                                 </span>
                             </Input>
                         </FormItem>
+                         <FormItem label="权限">
+                            <RadioGroup v-model="form.status">
+                                    <Radio :label="2">
+                                        <span>管理员</span>
+                                    </Radio>
+                                    <Radio :label="3">
+                                        <span>会员</span>
+                                    </Radio>
+                                    <Radio :label="4">
+                                        <span>普通用户</span>
+                                    </Radio>
+                                </RadioGroup>
+                         </FormItem>
                         <FormItem>
-                            <Button @click="handleSubmit" type="primary" long>登录</Button>
+                            <Button @click="handleSubmit" type="primary" long>注册</Button>
                         </FormItem>
                     </Form>
-                    <p class="login-tip">
-                        <router-link :to='{ path: "regist"}'>注册</router-link>
-                    </p>
                 </div>
             </Card>
         </div>
@@ -45,8 +55,9 @@ export default {
     data () {
         return {
             form: {
-                userName: 'iview_admin',
-                password: ''
+                userName: '',
+                password: '',
+                status: 2
             },
             rules: {
                 userName: [
@@ -62,17 +73,22 @@ export default {
         handleSubmit () {
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
-                    Cookies.set('user', this.form.userName);
-                    Cookies.set('password', this.form.password);
-                    this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
-                    if (this.form.userName === 'iview_admin') {
-                        Cookies.set('access', 0);
-                    } else {
-                        Cookies.set('access', 1);
-                    }
-                    this.$router.push({
-                        name: 'home_index'
-                    });
+
+                    this.$server.regist(this.form.userName,this.form.password,this.form.status).then(res => {
+                        console.log(res);
+                    });;
+
+                    // Cookies.set('user', this.form.userName);
+                    // Cookies.set('password', this.form.password);
+                    // this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
+                    // if (this.form.userName === 'iview_admin') {
+                    //     Cookies.set('access', 0);
+                    // } else {
+                    //     Cookies.set('access', 1);
+                    // }
+                    // this.$router.push({
+                    //     name: 'home_index'
+                    // });
                 }
             });
         }
